@@ -1,0 +1,123 @@
+create database carrental;
+use carrental;
+CREATE TABLE CUSTOMER (
+    Cust_ID INT PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Phone VARCHAR(15) NOT NULL,
+    Email VARCHAR(100),
+    Address VARCHAR(255)
+);
+CREATE TABLE CAR (
+    Vehicle_ID INT PRIMARY KEY,
+    Model VARCHAR(100) NOT NULL,
+    Year INT,
+    Type VARCHAR(50),
+    DailyRate DECIMAL(8,2),
+    WeeklyRate DECIMAL(8,2),
+    Availability VARCHAR(20) DEFAULT 'Yes',
+    IsAvailable BOOLEAN DEFAULT TRUE
+);
+CREATE TABLE RENTALS (
+    Rental_No INT PRIMARY KEY,
+    Cust_ID INT,
+    Vehicle_ID INT,
+    Rental_Type VARCHAR(10),
+    Start_Date DATE,
+    Return_Date DATE,
+    Total_Days INT,
+    Amount_Due DECIMAL(8,2),
+    Status VARCHAR(20) DEFAULT 'Active',
+    FOREIGN KEY (Cust_ID) REFERENCES CUSTOMER(Cust_ID),
+    FOREIGN KEY (Vehicle_ID) REFERENCES CAR(Vehicle_ID)
+);
+CREATE TABLE PAYMENT (
+    Payment_ID INT PRIMARY KEY,
+    Rental_No INT,
+    Payment_Date DATE,
+    Amount_Paid DECIMAL(8,2),
+    Payment_Method VARCHAR(20),
+    FOREIGN KEY (Rental_No) REFERENCES RENTALS(Rental_No)
+);
+-- altering because it doesnt allowed the null values
+ALTER TABLE CUSTOMER
+MODIFY Phone VARCHAR(15) NOT NULL DEFAULT '0000000000';
+
+INSERT INTO CUSTOMER (Cust_ID, Name, Phone, Email, Address) VALUES
+(1, 'Kadhambari', '9876543210', 'kadhi@gmail.com', 'Salem, Tamil Nadu'),
+(2, 'Dhanush Kumar', '0000000000', 'dhamu@example.com', 'Chennai, Tamil Nadu'),
+(3, 'Yogasree', '8765432190', NULL, 'Coimbatore, Tamil Nadu'),
+(4, 'Harsha', '9988776655', 'harsha@gmail.com', 'Madurai, Tamil Nadu'),
+(5, 'Agu', '9845012345', 'agu@outlook.com', 'Trichy, Tamil Nadu'),
+(6, 'Karthik', '9753112233', NULL, 'Erode, Tamil Nadu'),
+(7, 'Meena', '0000000000', 'meena@gmail.com', 'Salem, Tamil Nadu'),
+(8, 'Suresh Kumar', '9988001122', 'suresh@gmail.com', 'Chennai, Tamil Nadu'),
+(9, 'Vignesh', '9090909090', 'vignesh@example.com', 'Coimbatore, Tamil Nadu'),
+(10, 'Anitha', '9123456789', NULL, 'Madurai, Tamil Nadu');
+
+INSERT INTO CAR (Vehicle_ID, Model, Year, Type, DailyRate, WeeklyRate) VALUES
+(1, 'Toyota Innova', 2020, 'SUV', 2000.00, 12000.00),
+(2, 'Honda City', 2019, 'Sedan', 1500.00, 9000.00),
+(3, 'Hyundai Creta', 2021, 'SUV', 2200.00, 13000.00),
+(4, 'Maruti Swift', 2018, 'Hatchback', 1000.00, 6000.00),
+(5, 'Mahindra XUV500', 2022, 'SUV', 2500.00, 15000.00),
+(6, 'Tata Nexon', 2020, 'SUV', 1800.00, 10800.00),
+(7, 'Ford EcoSport', 2019, 'SUV', 1900.00, 11400.00),
+(8, 'Honda Amaze', 2021, 'Sedan', 1600.00, 9600.00),
+(9, 'Maruti Baleno', 2018, 'Hatchback', 1200.00, 7200.00),
+(10, 'Hyundai Verna', 2020, 'Sedan', 1700.00, 10200.00);
+
+INSERT INTO RENTALS (Rental_No, Cust_ID, Vehicle_ID, Rental_Type, Start_Date, Return_Date, Total_Days, Amount_Due) VALUES
+(1, 1, 1, 'Daily', '2025-09-01', '2025-09-03', 3, 6000.00),
+(2, 2, 2, 'Weekly', '2025-09-05', '2025-09-12', 7, 9000.00),
+(3, 3, 3, 'Daily', '2025-09-02', '2025-09-04', 2, 4400.00),
+(4, 4, 4, 'Daily', '2025-09-03', '2025-09-05', 2, 2000.00),
+(5, 5, 5, 'Weekly', '2025-09-06', '2025-09-13', 7, 15000.00),
+(6, 6, 6, 'Daily', '2025-09-04', '2025-09-06', 2, 3600.00),
+(7, 7, 7, 'Weekly', '2025-09-07', '2025-09-14', 7, 11400.00),
+(8, 8, 8, 'Daily', '2025-09-08', '2025-09-09', 1, 1600.00),
+(9, 9, 9, 'Weekly', '2025-09-10', '2025-09-17', 7, 7200.00),
+(10, 10, 10, 'Daily', '2025-09-11', '2025-09-12', 1, 1700.00);
+
+INSERT INTO PAYMENT (Payment_ID, Rental_No, Payment_Date, Amount_Paid, Payment_Method) VALUES
+(1, 1, '2025-09-01', 6000.00, 'Cash'),
+(2, 2, '2025-09-05', 9000.00, 'Card'),
+(3, 3, '2025-09-02', 4400.00, 'UPI'),
+(4, 4, '2025-09-03', 2000.00, 'Cash'),
+(5, 5, '2025-09-06', 15000.00, 'Card'),
+(6, 6, '2025-09-04', 3600.00, 'UPI'),
+(7, 7, '2025-09-07', 11400.00, 'Cash'),
+(8, 8, '2025-09-08', 1600.00, 'Card'),
+(9, 9, '2025-09-10', 7200.00, 'UPI'),
+(10, 10, '2025-09-11', 1700.00, 'Cash');
+
+-- handling missing values using NULL or DEFAULT
+-- Phone column cannot be NULL, so we used DEFAULT '0000000000'
+
+ALTER TABLE CUSTOMER
+MODIFY Phone VARCHAR(15) NOT NULL DEFAULT '0000000000';
+
+-- Email and Address allow NULL, so you can insert NULL where missing
+INSERT INTO CUSTOMER (Cust_ID, Name, Phone, Email, Address) VALUES
+(11, 'Ramesh', '0000000000', NULL, NULL);
+
+-- Use UPDATE and DELETE with WHERE conditions
+-- Update a customer's phone number
+UPDATE CUSTOMER
+SET Phone = '9998887776'
+WHERE Cust_ID = 2;
+-- Mark a rental as completed
+UPDATE RENTALS
+SET Status = 'Completed'
+WHERE Rental_No = 1;
+-- Change availability of a car
+UPDATE CAR
+SET IsAvailable = FALSE, Availability = 'No'
+WHERE Vehicle_ID = 1;
+
+DELETE FROM PAYMENT
+WHERE Rental_No = 3;
+
+
+
+
+
